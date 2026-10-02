@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5f7a">
+<meta name="mobile-web-app-capable" content="yes">
+<title>برنامه روزانه</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap">
+<style>
+:root{
+  --bg:#eef2f4; --card:#ffffff; --ink:#18232a; --muted:#56646d; --line:#cfd8dd; --soft:#e4ebee;
+  --accent:#1f5f7a; --accent-ink:#ffffff; --accent-soft:#dbe9ef; --done:#2f6b45; --warn:#9a3d1c;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11181c; --card:#1a2329; --ink:#e6edf0; --muted:#9fb0b9; --line:#33424a; --soft:#24313a;
+    --accent:#6fb3d2; --accent-ink:#0d1a20; --accent-soft:#1f3540; --done:#7cc79a; --warn:#f0a07e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11181c; --card:#1a2329; --ink:#e6edf0; --muted:#9fb0b9; --line:#33424a; --soft:#24313a;
+  --accent:#6fb3d2; --accent-ink:#0d1a20; --accent-soft:#1f3540; --done:#7cc79a; --warn:#f0a07e;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:Vazirmatn,Tahoma,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px 40px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line)}
+.daterow{display:flex;align-items:center;gap:8px}
+.navbtn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.navbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.datebox{flex:1;min-width:0;text-align:center;position:relative}
+.date-main{font-size:20px;font-weight:800;color:var(--accent);line-height:1.2}
+.date-sub{font-size:13px;color:var(--muted)}
+.datebox input[type=date]{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.tabs{display:flex;gap:6px;margin-top:10px}
+.tab{flex:1;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:14px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.status{font-size:12px;color:var(--muted);text-align:center;margin-top:6px;min-height:18px}
+.todaylink{font-size:12px;border:0;background:none;color:var(--accent);text-decoration:underline;cursor:pointer;padding:0 4px}
+
+/* summary strip */
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:14px 0 4px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center}
+.chip b{display:block;font-size:18px;color:var(--accent);line-height:1.2}
+.chip span{font-size:12px;color:var(--muted)}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px}
+.card h2{margin:0 0 10px;font-size:17px;font-weight:800;color:var(--accent);display:flex;align-items:baseline;gap:8px}
+.card h2 small{margin-inline-start:auto;font-size:12px;font-weight:500;color:var(--muted)}
+.sub{border:1px solid var(--soft);border-radius:12px;padding:10px;margin-top:8px}
+.sub:first-of-type{margin-top:0}
+.subhead{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700}
+.subhead .grow{flex:1}
+label.f{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+input[type=text],input[type=number],input[type=time],input[type=tel],textarea{
+  width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:8px 10px;outline:none}
+textarea{min-height:120px;resize:vertical;line-height:1.7}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.g-type{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:8px}
+.mt{margin-top:8px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.check{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;min-height:44px}
+.check input{width:24px;height:24px;accent-color:var(--done);margin:0;cursor:pointer}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:700}
+.dot[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cup{width:34px;height:40px;border:1.5px solid var(--line);border-radius:4px 4px 10px 10px;background:var(--card);cursor:pointer;padding:0}
+.cup[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.totals{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.totals b{color:var(--accent)}
+
+/* list rows */
+.lrow{display:flex;align-items:center;gap:8px;margin-top:8px}
+.lrow input[type=checkbox]{width:24px;height:24px;accent-color:var(--done);flex-shrink:0;margin:0}
+.lrow .grow{flex:1;min-width:0}
+.lrow.done input[type=text]{text-decoration:line-through;color:var(--muted)}
+.del{width:40px;height:44px;border:0;background:none;color:var(--muted);cursor:pointer;flex-shrink:0;display:grid;place-items:center;border-radius:10px}
+.del svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.add{margin-top:10px;width:100%;min-height:44px;border:1.5px dashed var(--accent);border-radius:10px;background:none;color:var(--accent);font-weight:700;cursor:pointer}
+.w-time{width:96px;flex-shrink:0}
+.w-amt{width:110px;flex-shrink:0}
+
+/* report */
+.rtable-wrap{overflow-x:auto;margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:700}
+td:first-child,th:first-child{text-align:right}
+tfoot td{font-weight:800;color:var(--accent);border-bottom:0}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:16px 0}
+.help{font-size:13px;color:var(--muted);line-height:1.8}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="daterow">
+      <button class="navbtn" id="next" aria-label="روز بعد"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="datebox">
+        <div class="date-main" id="dateMain"></div>
+        <div class="date-sub"><span id="dateSub"></span></div>
+        <input type="date" id="picker" aria-label="انتخاب تاریخ">
+      </div>
+      <button class="navbtn" id="prev" aria-label="روز قبل"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+    <div class="tabs">
+      <button class="tab" id="tabDay" aria-pressed="true">برنامه روز</button>
+      <button class="tab" id="tabWeek" aria-pressed="false">گزارش ۷ روز</button>
+    </div>
+    <div class="status"><span id="status">در حال آماده‌سازی…</span> <button class="todaylink" id="goToday" hidden>برو به امروز</button></div>
+  </div>
+  <main id="app"></main>
+</div>
+
+<script>
+(function(){
+'use strict';
+/* ---------- helpers ---------- */
+const $ = (s)=>document.querySelector(s);
+const esc = (s)=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toNum = (s)=>{ if(s==null) return 0; const t=String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,٬،\s]/g,''); const n=parseFloat(t); return isFinite(n)?n:0; };
+const fa = (n)=>Number(n||0).toLocaleString('fa-IR');
+const pad = (n)=>String(n).padStart(2,'0');
+const keyOf = (d)=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const dateOf = (k)=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);};
+const addDays = (k,n)=>{const d=dateOf(k);d.setDate(d.getDate()+n);return keyOf(d);};
+let fmtLong, fmtShort;
+try{
+  fmtLong = new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',day:'numeric'});
+  fmtShort = new Intl.DateTimeFormat('fa-IR-u-ca-persian',{weekday:'short',month:'numeric',day:'numeric'});
+}catch(e){ fmtLong = new Intl.DateTimeFormat('fa-IR'); fmtShort = fmtLong; }
+const weekday = (d)=>{ try{return new Intl.DateTimeFormat('fa-IR',{weekday:'long'}).format(d);}catch(e){return '';} };
+const ICON_X = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+/* ---------- data model ---------- */
+const SLOTS = ['صبح','ظهر','شب'];
+const MEALS = ['صبحانه','میان‌وعده','ناهار','میان‌وعده','شام'];
+const LIFE = [
+  {k:'it', t:'فعالیت فنی IT', p:'چی کار کردم؟'},
+  {k:'kid',t:'وقت با دخترم', p:'چی کار کردیم؟'},
+  {k:'dad',t:'دیدار با بابا', p:'توضیح'}
+];
+function blank(){
+  return {
+    v:1, updatedAt:0,
+    ex: SLOTS.map(()=>({type:'',min:'',int:'',done:false})),
+    kcal:'', sat:0,
+    meals: MEALS.map(()=>''), water:0,
+    study:{lang:{min:'',topic:''}, net:{min:'',topic:''}},
+    life:{it:{done:false,min:'',note:''}, kid:{done:false,min:'',note:''}, dad:{done:false,min:'',note:''}},
+    students:[{time:'',name:'',done:false}],
+    money:{spent:'',saved:'',pays:[{what:'',amt:''}]},
+    tasks:[{t:'',done:false}],
+    notes:''
+  };
+}
+function merge(b,d){
+  if(d===undefined||d===null) return b;
+  if(Array.isArray(b)){
+    if(!Array.isArray(d)) return b;
+    if(b.length && typeof b[0]==='object'){ const tmpl=b[0]; const out=d.map(x=>merge(JSON.parse(JSON.stringify(tmpl)),x)); return b.length===SLOTS.length&&out.length<b.length? b.map((x,i)=>out[i]||x) : out; }
+    return b.map((x,i)=>d[i]===undefined?x:d[i]);
+  }
+  if(typeof b==='object'){ const o={}; for(const k in b) o[k]=merge(b[k],d[k]); return o; }
+  return (typeof d===typeof b)?d:b;
+}
+const normalize = (d)=>merge(blank(), d||{});
+function getPath(o,p){return p.split('.').reduce((a,k)=>a==null?a:a[k],o);}
+function setPath(o,p,v){const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++)a=a[ks[i]];a[ks[ks.length-1]]=v;}
+
+/* ---------- storage ---------- */
+const LS = 'planner:';
+function localGet(k){try{const r=localStorage.getItem(LS+k);return r?normalize(JSON.parse(r)):null;}catch(e){return null;}}
+function localSet(k,d){try{localStorage.setItem(LS+k,JSON.stringify(d));}catch(e){}}
+let db=null, uid=null;
+const ref = (k)=>db.collection('data/users/'+uid).doc('d'+k);
+
+let curKey = keyOf(new Date());
+let state = localGet(curKey) || blank();
+let view = 'day';
+let timer=null, saving=false, queued=null;
+
+function setStatus(t){ $('#status').textContent=t; }
+function syncLabel(){ return 'ذخیره شد روی همین گوشی'; }
+
+function touch(){
+  state.updatedAt = Date.now();
+  localSet(curKey,state);
+  setStatus('در حال ذخیره…');
+  clearTimeout(timer);
+  const k=curKey;
+  timer=setTimeout(()=>{timer=null;flush(k,state);},800);
+}
+async function flush(k,data){
+  if(!(db&&uid)){ setStatus(syncLabel()); return; }
+  if(saving){ queued={k,data}; return; }
+  saving=true;
+  const body=JSON.parse(JSON.stringify(data));
+  try{ await ref(k).set(body); setStatus(syncLabel()); }
+  catch(e){
+    if(e&&e.code==='unavailable'){ setTimeout(()=>flush(k,data),1500+Math.random()*1000); }
+    else setStatus('فقط روی همین دستگاه ذخیره شد');
+  }
+  finally{
+    saving=false;
+    if(queued){const q=queued;queued=null;flush(q.k,q.data);}
+  }
+}
+function flushPending(){ if(timer){clearTimeout(timer);timer=null;flush(curKey,state);} }
+
+async function load(k){
+  flushPending();
+  curKey=k;
+  state = localGet(k) || blank();
+  renderAll();
+  if(db&&uid){
+    try{
+      const snap = await ref(k).get();
+      if(curKey!==k) return;
+      if(snap.exists){
+        const remote = normalize(snap.data());
+        if((remote.updatedAt||0) >= (state.updatedAt||0)){ state=remote; localSet(k,state); if(view==='day') renderDay(); }
+        else flush(k,state);
+      } else if(state.updatedAt>0){ flush(k,state); }
+      setStatus(syncLabel());
+    }catch(e){ setStatus('اتصال برقرار نیست؛ روی همین دستگاه ذخیره می‌شه'); }
+  }
+}
+async function readDay(k){
+  if(db&&uid){ try{const s=await ref(k).get(); if(s.exists) return normalize(s.data());}catch(e){} }
+  return localGet(k);
+}
+
+/* ---------- derived ---------- */
+function calc(d){
+  const exMin = d.ex.reduce((a,x)=>a+toNum(x.min),0);
+  const studyMin = toNum(d.study.lang.min)+toNum(d.study.net.min);
+  const tasks = d.tasks.filter(t=>t.t.trim()||t.done);
+  const tDone = tasks.filter(t=>t.done).length;
+  const paySum = d.money.pays.reduce((a,p)=>a+toNum(p.amt),0);
+  const taught = d.students.filter(s=>s.done).length;
+  return {exMin,studyMin,tTotal:tasks.length,tDone,paySum,taught};
+}
+function updateDerived(){
+  const c=calc(state);
+  const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
+  set('sEx',fa(c.exMin)); set('sStudy',fa(c.studyMin)); set('sTasks',fa(c.tDone)+'/'+fa(c.tTotal)); set('sWater',fa(state.water)+'/۸');
+  set('exTotal',fa(c.exMin)); set('studyTotal',fa(c.studyMin)); set('paySum',fa(c.paySum)); set('taught',fa(c.taught));
+}
+
+/* ---------- render ---------- */
+function renderHeader(){
+  const d=dateOf(curKey);
+  $('#dateMain').textContent = weekday(d);
+  $('#dateSub').textContent = fmtLong.format(d);
+  $('#picker').value = curKey;
+  $('#goToday').hidden = curKey===keyOf(new Date());
+  $('#tabDay').setAttribute('aria-pressed',view==='day');
+  $('#tabWeek').setAttribute('aria-pressed',view==='week');
+}
+function renderAll(){ renderHeader(); if(view==='day') renderDay(); else renderWeek(); }
+
+const inp=(p,ph,type,extra)=>`<input type="${type||'text'}" data-p="${p}" value="${esc(getPath(state,p))}" placeholder="${esc(ph||'')}" ${type==='number'||type==='tel'?'inputmode="numeric"':''} ${extra||''}>`;
+const chk=(p,label)=>`<label class="check"><input type="checkbox" data-p="${p}" ${getPath(state,p)?'checked':''}>${label||''}</label>`;
+
+function renderDay(){
+  const s=state, c=calc(s);
+  let h='';
+  h+=`<div class="strip">
+    <div class="chip"><b id="sEx">${fa(c.exMin)}</b><span>دقیقه ورزش</span></div>
+    <div class="chip"><b id="sStudy">${fa(c.studyMin)}</b><span>دقیقه مطالعه</span></div>
+    <div class="chip"><b id="sTasks">${fa(c.tDone)}/${fa(c.tTotal)}</b><span>کار انجام‌شده</span></div>
+    <div class="chip"><b id="sWater">${fa(s.water)}/۸</b><span>لیوان آب</span></div>
+  </div>`;
+
+  // exercise
+  h+=`<section class="card"><h2>ورزش خودم<small>مدت به دقیقه</small></h2>`;
+  SLOTS.forEach((slot,i)=>{
+    const ints=[['low','کم'],['mid','متوسط'],['high','زیاد']];
+    h+=`<div class="sub"><div class="subhead"><span class="grow">${slot}</span>${chk('ex.'+i+'.done','انجام شد')}</div>
+      <div class="g-type">${inp('ex.'+i+'.type','نوع ورزش / تمرین')}${inp('ex.'+i+'.min','دقیقه','tel')}</div>
+      <div class="seg mt" role="group" aria-label="شدت ${slot}">${ints.map(([v,l])=>`<button data-set="ex.${i}.int" data-v="${v}" aria-pressed="${s.ex[i].int===v}">${l}</button>`).join('')}</div>
+    </div>`;
+  });
+  h+=`<div class="grid2 mt"><div><label class="f" for="kcal">کالری سوزانده (kcal)</label>${inp('kcal','مثلاً ۴۵۰','tel','id="kcal"')}</div>
+      <div><label class="f">مجموع ورزش</label><div style="min-height:44px;display:flex;align-items:center;font-weight:700"><span id="exTotal">${fa(c.exMin)}</span>&nbsp;دقیقه</div></div></div>
+    <label class="f mt">رضایت از تمرین امروز (۱ کم … ۵ عالی)</label>
+    <div class="dots" role="group" aria-label="رضایت از تمرین">${[1,2,3,4,5].map(n=>`<button class="dot" data-set="sat" data-v="${n}" aria-pressed="${s.sat===n}">${fa(n)}</button>`).join('')}</div>
+  </section>`;
+
+  // coaching
+  h+=`<section class="card"><h2>تدریس ورزش<small>تدریس‌شده: <b id="taught">${fa(c.taught)}</b></small></h2>`;
+  s.students.forEach((st,i)=>{
+    h+=`<div class="lrow ${st.done?'done':''}"><input type="checkbox" data-p="students.${i}.done" aria-label="تدریس شد" ${st.done?'checked':''}>
+      <input class="w-time" type="time" data-p="students.${i}.time" value="${esc(st.time)}" aria-label="ساعت">
+      <div class="grow">${inp('students.'+i+'.name','نام شاگرد')}</div>
+      <button class="del" data-del="students" data-i="${i}" aria-label="حذف">${ICON_X}</button></div>`;
+  });
+  h+=`<button class="add" data-add="students">+ شاگرد</button></section>`;
+
+  // food
+  h+=`<section class="card"><h2>تغذیه</h2>`;
+  MEALS.forEach((m,i)=>{ h+=`<div class="mt"><label class="f">${m}</label>${inp('meals.'+i,'چی خوردم؟')}</div>`; });
+  h+=`<label class="f mt">آب (هر لیوان را بزن)</label><div class="dots">${[1,2,3,4,5,6,7,8].map(n=>`<button class="cup" data-set="water" data-v="${n}" aria-pressed="${s.water>=n}" aria-label="لیوان ${fa(n)}"></button>`).join('')}</div></section>`;
+
+  // study
+  h+=`<section class="card"><h2>مطالعه<small>مجموع: <b id="studyTotal">${fa(c.studyMin)}</b> دقیقه</small></h2>`;
+  [['lang','زبان'],['net','درس شبکه']].forEach(([k,l])=>{
+    h+=`<div class="sub"><div class="subhead">${l}</div><div class="g-type">${inp('study.'+k+'.topic','چی خوندم؟')}${inp('study.'+k+'.min','دقیقه','tel')}</div></div>`;
+  });
+  h+=`</section>`;
+
+  // life
+  h+=`<section class="card"><h2>کار فنی و خانواده</h2>`;
+  LIFE.forEach(l=>{
+    h+=`<div class="sub"><div class="subhead"><span class="grow">${l.t}</span>${chk('life.'+l.k+'.done','انجام شد')}</div>
+      <div class="g-type">${inp('life.'+l.k+'.note',l.p)}${inp('life.'+l.k+'.min','دقیقه','tel')}</div></div>`;
+  });
+  h+=`</section>`;
+
+  // money
+  h+=`<section class="card"><h2>پول امروز</h2>
+    <div class="grid2"><div><label class="f" for="spent">خرج کردم</label>${inp('money.spent','مبلغ','tel','id="spent"')}</div>
+    <div><label class="f" for="saved">پس‌انداز کردم</label>${inp('money.saved','مبلغ','tel','id="saved"')}</div></div>
+    <label class="f mt">پرداخت‌ها (بابت چی؟)</label>`;
+  s.money.pays.forEach((p,i)=>{
+    h+=`<div class="lrow"><div class="grow">${inp('money.pays.'+i+'.what','بابت…')}</div>
+      <input class="w-amt" type="text" inputmode="numeric" data-p="money.pays.${i}.amt" value="${esc(p.amt)}" placeholder="مبلغ" aria-label="مبلغ">
+      <button class="del" data-del="money.pays" data-i="${i}" aria-label="حذف">${ICON_X}</button></div>`;
+  });
+  h+=`<button class="add" data-add="money.pays">+ پرداخت</button>
+    <div class="totals"><span>جمع پرداخت‌ها: <b id="paySum">${fa(c.paySum)}</b></span></div></section>`;
+
+  // tasks
+  h+=`<section class="card"><h2>کارهایی که امروز باید انجام بدم</h2>`;
+  s.tasks.forEach((t,i)=>{
+    h+=`<div class="lrow ${t.done?'done':''}"><input type="checkbox" data-p="tasks.${i}.done" aria-label="انجام شد" ${t.done?'checked':''}>
+      <div class="grow">${inp('tasks.'+i+'.t','کار…')}</div>
+      <button class="del" data-del="tasks" data-i="${i}" aria-label="حذف">${ICON_X}</button></div>`;
+  });
+  h+=`<button class="add" data-add="tasks">+ کار جدید</button></section>`;
+
+  // notes
+  h+=`<section class="card"><h2>توضیحات اضافی / یادداشت</h2><textarea data-p="notes" placeholder="هر چیزی که می‌خوای یادت بمونه…">${esc(s.notes)}</textarea></section>`;
+
+  $('#app').innerHTML=h;
+}
+
+async function renderWeek(){
+  const app=$('#app');
+  app.innerHTML='<div class="card"><div class="empty">در حال خواندن…</div></div>';
+  const keys=[]; for(let i=6;i>=0;i--) keys.push(addDays(curKey,-i));
+  const days=await Promise.all(keys.map(k=>k===curKey?Promise.resolve(state):readDay(k)));
+  if(view!=='week') return;
+  const T={ex:0,kcal:0,st:0,sp:0,sv:0,td:0,tt:0,tg:0}; let satN=0,satS=0;
+  let rows='';
+  keys.forEach((k,i)=>{
+    const d=days[i];
+    const label=esc(fmtShort.format(dateOf(k)));
+    if(!d||!d.updatedAt){ rows+=`<tr><td>${label}</td><td colspan="7" style="color:var(--muted)">—</td></tr>`; return; }
+    const c=calc(d);
+    T.ex+=c.exMin; T.kcal+=toNum(d.kcal); T.st+=c.studyMin; T.sp+=toNum(d.money.spent); T.sv+=toNum(d.money.saved); T.td+=c.tDone; T.tt+=c.tTotal; T.tg+=c.taught;
+    if(d.sat){satN++;satS+=d.sat;}
+    rows+=`<tr><td>${label}</td><td>${fa(c.exMin)}</td><td>${fa(toNum(d.kcal))}</td><td>${d.sat?fa(d.sat):'—'}</td><td>${fa(c.studyMin)}</td><td>${fa(c.taught)}</td><td>${fa(toNum(d.money.spent))}</td><td>${fa(toNum(d.money.saved))}</td></tr>`;
+  });
+  app.innerHTML=`<section class="card"><h2>۷ روز تا ${esc(fmtLong.format(dateOf(curKey)))}</h2>
+    <div class="strip" style="margin-top:0">
+      <div class="chip"><b>${fa(T.ex)}</b><span>دقیقه ورزش</span></div>
+      <div class="chip"><b>${fa(T.st)}</b><span>دقیقه مطالعه</span></div>
+      <div class="chip"><b>${fa(T.td)}/${fa(T.tt)}</b><span>کار انجام‌شده</span></div>
+      <div class="chip"><b>${satN?fa(Math.round(satS/satN*10)/10):'—'}</b><span>میانگین رضایت</span></div>
+    </div>
+    <div class="rtable-wrap"><table>
+      <thead><tr><th>روز</th><th>ورزش (دقیقه)</th><th>کالری</th><th>رضایت</th><th>مطالعه</th><th>تدریس</th><th>خرج</th><th>پس‌انداز</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td>جمع</td><td>${fa(T.ex)}</td><td>${fa(T.kcal)}</td><td>${satN?fa(Math.round(satS/satN*10)/10):'—'}</td><td>${fa(T.st)}</td><td>${fa(T.tg)}</td><td>${fa(T.sp)}</td><td>${fa(T.sv)}</td></tr></tfoot>
+    </table></div></section>
+    <section class="card"><h2>پشتیبان‌گیری</h2>
+    <p class="help" style="margin:0 0 10px">اطلاعاتت فقط روی همین گوشی ذخیره می‌شه. هر چند وقت یک بار پشتیبان بگیر تا اگه برنامه پاک شد یا گوشی عوض شد، چیزی از دست نره.</p>
+    <div class="grid2"><button class="add" style="margin:0" id="exportBtn">ذخیره فایل پشتیبان</button>
+    <button class="add" style="margin:0" id="importBtn">بازگردانی از فایل</button></div>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+    <p class="help" id="backupMsg" style="margin:8px 0 0"></p></section>`;
+}
+
+/* ---------- events ---------- */
+const app=$('#app');
+app.addEventListener('input',e=>{
+  const t=e.target, p=t.dataset&&t.dataset.p; if(!p) return;
+  setPath(state,p, t.type==='checkbox'?t.checked:t.value);
+  if(t.type==='checkbox'){ const row=t.closest('.lrow'); if(row) row.classList.toggle('done',t.checked); }
+  updateDerived(); touch();
+});
+app.addEventListener('change',e=>{ const t=e.target; if(t.type==='checkbox'&&t.dataset.p){ /* handled by input in most browsers */ if(getPath(state,t.dataset.p)!==t.checked){ setPath(state,t.dataset.p,t.checked); updateDerived(); touch(); } } });
+app.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.set){
+    const p=b.dataset.set, raw=b.dataset.v, cur=getPath(state,p);
+    let v = (p==='sat'||p==='water')?Number(raw):raw;
+    if(p==='water') v = (cur===v)?v-1:v;
+    else if(cur===v) v = (p==='sat')?0:'';
+    setPath(state,p,v); touch(); renderDay();
+  } else if(b.dataset.add){
+    const arr=getPath(state,b.dataset.add);
+    const tmpl={students:{time:'',name:'',done:false},tasks:{t:'',done:false},'money.pays':{what:'',amt:''}}[b.dataset.add];
+    arr.push(JSON.parse(JSON.stringify(tmpl))); touch(); renderDay();
+    const rows=app.querySelectorAll(`[data-p^="${b.dataset.add}.${arr.length-1}."][type="text"]`); if(rows[0]) rows[0].focus();
+  } else if(b.dataset.del){
+    const arr=getPath(state,b.dataset.del); arr.splice(Number(b.dataset.i),1);
+    if(!arr.length){ const tmpl={students:{time:'',name:'',done:false},tasks:{t:'',done:false},'money.pays':{what:'',amt:''}}[b.dataset.del]; arr.push(JSON.parse(JSON.stringify(tmpl))); }
+    touch(); renderDay();
+  }
+});
+$('#prev').addEventListener('click',()=>load(addDays(curKey,-1)));
+$('#next').addEventListener('click',()=>load(addDays(curKey,1)));
+$('#goToday').addEventListener('click',()=>load(keyOf(new Date())));
+$('#picker').addEventListener('change',e=>{ if(e.target.value) load(e.target.value); });
+$('#tabDay').addEventListener('click',()=>{view='day';renderAll();});
+$('#tabWeek').addEventListener('click',()=>{flushPending();view='week';renderAll();});
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') flushPending(); });
+
+/* ---------- backup ---------- */
+function allData(){
+  const out={app:'daily-planner',v:1,exportedAt:new Date().toISOString(),days:{}};
+  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.indexOf(LS)===0){ out.days[k.slice(LS.length)]=JSON.parse(localStorage.getItem(k)); } } }catch(e){}
+  return out;
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const msg=()=>document.getElementById('backupMsg');
+  if(b.id==='exportBtn'){
+    flushPending(); localSet(curKey,state);
+    const data=allData(); const n=Object.keys(data.days).length;
+    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='planner-backup-'+keyOf(new Date())+'.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    if(msg()) msg().textContent='فایل پشتیبان با '+fa(n)+' روز ذخیره شد (پوشه Download).';
+  } else if(b.id==='importBtn'){ document.getElementById('importFile').click(); }
+});
+document.addEventListener('change',e=>{
+  if(e.target.id!=='importFile'||!e.target.files[0]) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const m=document.getElementById('backupMsg');
+    try{
+      const data=JSON.parse(r.result); if(!data||data.app!=='daily-planner'||!data.days) throw 0;
+      let n=0; for(const k in data.days){ if(/^\d{4}-\d{2}-\d{2}$/.test(k)){ const incoming=normalize(data.days[k]); const cur=localGet(k); if(!cur||(incoming.updatedAt||0)>=(cur.updatedAt||0)){ localSet(k,incoming); n++; } } }
+      state=localGet(curKey)||blank();
+      if(m) m.textContent=fa(n)+' روز بازگردانی شد.';
+      renderWeek();
+    }catch(err){ if(m) m.textContent='این فایل، پشتیبان این برنامه نیست. فایلی را انتخاب کن که با «ذخیره فایل پشتیبان» ساخته شده.'; }
+  };
+  r.readAsText(e.target.files[0]);
+  e.target.value='';
+});
+
+/* ---------- start ---------- */
+renderAll();
+setStatus('ذخیره روی همین گوشی');
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+})();
+</script>
+</body>
+</html>
